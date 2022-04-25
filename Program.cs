@@ -68,7 +68,7 @@ namespace DocsLinkTool
                 Console.WriteLine(text);
                 sb.AppendLine(text);
             }
-            File.WriteAllText(Path.Combine(baseRepoPath, @"dotnet-link-tool\link-stats.txt"), sb.ToString());
+            //File.WriteAllText(Path.Combine(baseRepoPath, @"dotnet-link-tool\link-stats.txt"), sb.ToString());
         }
     }
 }
