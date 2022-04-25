@@ -257,7 +257,7 @@ namespace DocsLinkTool
                     if (updatedLink.EndsWith("/"))
                     {
                         updatedLink += "index";
-                        linkItemSet.Items.Add(new LinkItem("COMPLETE-PATH", updatedLink));
+                        linkItemSet.Items.Add(new LinkItem("COMPLETED-PATH", updatedLink));
                     }
 
                     // Validate that the article exists on disk.

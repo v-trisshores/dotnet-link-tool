@@ -8,12 +8,12 @@ The program fixes stale article links for which a redirect exists. Each link is 
 
 ## How to run
 
-Call the program passing in a single argument that's either:
+Call the program by passing in a single argument that's either:
 
-- A markdown file path (e.g. dotnet-link-tool.exe <markdown file path>), or
-- A folder path that contains markdown files at any nested level (e.g. dotnet-link-tool.exe <path to folder>).
+- A markdown file path (e.g. dotnet-link-tool.exe \<markdown file path\>), or
+- A folder path that contains markdown files at any nested level (e.g. dotnet-link-tool.exe \<folder path\>).
 
-## Redirect file assumptions (definitions.json)
+## Redirect file assumptions
 
 - No redirect double-hops.
 - No conflicting target urls for the same source url.
@@ -46,16 +46,17 @@ Here's an example of how an updated redirect is reported:
 Here's an example of how an updated non-redirect issue is reported:
 
 ```
-4. Link in article: '\net\wpf\properties\dependency-properties-overview.md' *
+4. Link in article: '\net\wpf\properties\dependency-properties-overview.md'
   ORIGINAL-LINK: /dotnet/desktop/wpf/xaml/
     REDIRECT-TO: no redirect
-      COMPLETE-PATH: /dotnet/desktop/wpf/xaml/index
+      COMPLETED-PATH: /dotnet/desktop/wpf/xaml/index
 ```
 
 ## Miscellaneous notes
 
 ### Repo folder structure
 
+```
 dotnet-desktop-guide/
     framework/
         winforms/
@@ -93,14 +94,18 @@ dotnet-desktop-guide/
             windows/
             xaml/
     xaml-services/
+```
 
 ### Base alias links found in /dotnet/desktop/framework/ articles
 
+```
 /dotnet/desktop/wpf/get-started/...
 /dotnet/desktop/xaml-services/...
+```
 
 ### Base alias links found in /dotnet/desktop/net/ articles
 
+```
 /dotnet/desktop/wpf/advanced/...
 /dotnet/desktop/wpf/app-development/...
 /dotnet/desktop/wpf/controls/...
@@ -111,7 +116,8 @@ dotnet-desktop-guide/
 /dotnet/desktop/wpf/systems/...
 /dotnet/desktop/wpf/xaml/...
 /dotnet/desktop/xaml-services/...
+```
 
 ### Base alias links found in /dotnet/desktop/xaml-services/ articles
-    
+
 none
