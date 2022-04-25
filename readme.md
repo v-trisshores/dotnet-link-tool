@@ -1,6 +1,6 @@
 ﻿# dotnet-link-tool
 
-Updates article links in one or more markdown files within the \dotnet\docs-desktop\dotnet-desktop-guide repo.
+Updates article links in one or more markdown files within the [dotnet\docs-desktop](https://github.com/dotnet/docs-desktop) repo.
 
 You can run the program on a single markdown file, or on any folder that contains markdown files. For the latter case, every markdown file at any nested level is processed.
 
@@ -10,8 +10,8 @@ The program fixes stale article links for which a redirect exists. Each link is 
 
 Call the program by passing in a single argument that's either:
 
-- A markdown file path (e.g. dotnet-link-tool.exe \<markdown file path\>), or
-- A folder path that contains markdown files at any nested level (e.g. dotnet-link-tool.exe \<folder path\>).
+- A markdown file path (e.g. `dotnet-link-tool.exe attached-properties-overview.md`), or
+- A folder path that contains markdown files at any nested level (e.g. `dotnet-link-tool.exe C:\Repos\dotnet\docs-desktop\dotnet-desktop-guide`).
 
 ## Redirect file assumptions
 
@@ -20,8 +20,6 @@ Call the program by passing in a single argument that's either:
 - Target url is a same or higher version than source url.
 
 ## Link handling
-
-The program processes links as follows:
 
 - Checks and if necessary updates links based on `definitions.json` redirect entries.
 - Removes query parameters for relative links (e.g. `../net/wpf/data/123.md?view=netdesktop-5.0&preserve-view=true` => `../net/wpf/data/123.md`).
