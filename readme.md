@@ -24,21 +24,22 @@ Call the program by passing in a single argument that's either:
 - Checks and if necessary updates links based on `definitions.json` redirect entries.
 - Removes query parameters for relative links (e.g. `../net/wpf/data/123.md?view=netdesktop-5.0&preserve-view=true` => `../net/wpf/data/123.md`).
 - Removes `./` from the beginning of paths (e.g. `./data/123.md` => `data/123.md`)
-- Removes redundant path segments (e.g. for article path `\framework\wpf\advanced\123.md` and link path `../../../framework/wpf/controls/123.md`, change the relative path to `../controls/123.md`).
+- Removes redundant path segments (e.g. for article path `/framework/wpf/advanced/123.md` and link path `../../../framework/wpf/controls/123.md`, change the relative path to `../controls/123.md`).
 - For readability, adds the `index` file to links that omit it (e.g. `/dotnet/desktop/wpf/xaml/` => `/dotnet/desktop/wpf/xaml/index`).
-- Prints out a detailed configurable report of link transformations.
+- Prints out a detailed report of link transformations.
 
 ## Report output
 
 Here's an example of how an updated redirect is reported:
 
 ```
-51. Link in article: '\net\wpf\properties\framework-property-metadata.md'
-  ORIGINAL-LINK: /dotnet/desktop/wpf/advanced/property-value-inheritance?view=netframeworkdesktop-4.8&preserve-view=true
-    REMOVE-QUERY: /dotnet/desktop/wpf/advanced/property-value-inheritance
-      REDIRECT-TO: /dotnet/desktop/wpf/properties/property-value-inheritance?view=netdesktop-6.0
-        REMOVE-NEW-QUERY: /dotnet/desktop/wpf/properties/property-value-inheritance
-          RESTORE-QUERY: /dotnet/desktop/wpf/properties/property-value-inheritance?view=netdesktop-6.0&preserve-view=true
+353. Link in article: '\framework\wpf\advanced\drag-and-drop-overview.md' *
+  ORIGINAL-LINK: marking-routed-events-as-handled-and-class-handling.md#Class_Handling_of_Routed_Events
+    ALIAS-PATH: /dotnet/desktop/wpf/advanced/marking-routed-events-as-handled-and-class-handling#Class_Handling_of_Routed_Events
+      REMOVE-FRAGMENT: /dotnet/desktop/wpf/advanced/marking-routed-events-as-handled-and-class-handling
+        REDIRECT-TO: /dotnet/desktop/wpf/events/marking-routed-events-as-handled-and-class-handling?view=netdesktop-6.0
+          REMOVE-NEW-QUERY: /dotnet/desktop/wpf/events/marking-routed-events-as-handled-and-class-handling
+            RESTORE-FRAGMENT: /dotnet/desktop/wpf/events/marking-routed-events-as-handled-and-class-handling#class_handling_of_routed_events
 ```
 
 Here's an example of how an updated non-redirect issue is reported:

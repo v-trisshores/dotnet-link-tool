@@ -301,16 +301,16 @@ namespace DocsLinkTool
                     #region Restore query parameters
 
                     // Restore query.
-                    if (!isNewRelativeLink && query.Length > 0)
+                    if (!isNewRelativeLink && query.Length > 0 && !query.Contains("netdesktop"))
                     {
-                        updatedLink += query;
+                        updatedLink += query.ToLower();
                         linkItemSet.Items.Add(new LinkItem("RESTORE-QUERY", updatedLink));
                     }
 
                     // Restore fragment.
                     if (fragment.Length > 0)
                     {
-                        updatedLink += fragment;
+                        updatedLink += fragment.ToLower();
                         linkItemSet.Items.Add(new LinkItem("RESTORE-FRAGMENT", updatedLink));
                     }
 
