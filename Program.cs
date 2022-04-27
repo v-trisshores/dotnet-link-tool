@@ -4,8 +4,6 @@ namespace DocsLinkTool
 {
     internal class Program
     {
-        internal static List<LinkItemSet> LinkItemSets = new();
-
         /// <summary>
         /// Update links in one or more markdown files
         /// by using the definitions.json redirect file.
@@ -14,16 +12,22 @@ namespace DocsLinkTool
         /// <returns></returns>
         internal static async Task Main(string[] args)
         {
-            string[] filePaths = null;
+            string[] articleFilePaths = null;
+
+            if (args[0].ContainsXx(@"\dotnet-desktop-guide\framework\"))
+            {
+                throw new Exception("dotnet-link-tool isn't compatible with .NET Framework articles.");
+            }
+
             if (File.Exists(args[0]) && string.Equals(Path.GetExtension(args[0]), ".md"))
             {
                 // Store the path of the specified markdown file.
-                filePaths = new string[] { args[0] };
+                articleFilePaths = new string[] { args[0] };
             }
             else if (Directory.Exists(args[0]) && Directory.GetFiles(args[0], "*.md", SearchOption.AllDirectories).Length > 0)
             {
                 // Store the paths of all markdown files in folder.
-                filePaths = Directory.GetFiles(args[0], "*.md", SearchOption.AllDirectories);
+                articleFilePaths = Directory.GetFiles(args[0], "*.md", SearchOption.AllDirectories);
             }
             else
             {
@@ -36,14 +40,21 @@ namespace DocsLinkTool
             UpdateLinks.InitializePaths(baseRepoPath);
 
             // Iterate through each markdown file.
-            foreach (string filePath in filePaths)
+            await Task.Run(() =>
             {
-                // Run asynchronous task to update links in a file.
-                await UpdateLinks.UpdateArticleLinksAsync(filePath);
-            }
+                foreach (string articleFilePath in articleFilePaths)
+                {
+                    // Validate path isn't to a .NET Framework article.
+                    if (articleFilePath.ContainsXx(@"\dotnet-desktop-guide\framework\"))
+                        throw new Exception("dotnet-link-tool isn't compatible with .NET Framework articles.");
+
+                    // Update links in a file.
+                    UpdateLinks.UpdateArticleLinks(articleFilePath);
+                }
+            });
 
             // Print report.
-            LinkItemSets = LinkItemSets.Where(x => x.IsLinkChanged).OrderBy(x => x.ArticlePath).ToList();
+            Log.LinkItemSets = Log.LinkItemSets.Where(x => x.IsLinkChanged).OrderBy(x => x.ArticlePath).ToList();
 
             // Scope the report to fixed redirect issues.
             //LinkItemSets = LinkItemSets.Where(x => x.IsRedirected).ToList();
@@ -56,7 +67,7 @@ namespace DocsLinkTool
 
             StringBuilder sb = new();
             int i = 1;
-            foreach (LinkItemSet linkItemSet in LinkItemSets)
+            foreach (LinkItemSet linkItemSet in Log.LinkItemSets)
             {
                 string text = $"{i++}. Link in article: '{linkItemSet.ArticlePath}' {(linkItemSet.IsLinkChanged ? "*" : "")}\r\n";
                 string indent = "  ";
