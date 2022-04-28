@@ -312,8 +312,8 @@ namespace DocsLinkTool
                 //{ }
 
                 // Convert to a relative path if:
-                // The original link is .NET article link, or
-                // The link is a redirect (assumes the current article is .NET article and the redirect is to a .NET article).
+                // The original link is .NET 5/6 article link, or
+                // The link is a redirect (this condition assumes the current article is .NET 5/6 article and the redirect is to a .NET 5/6 article).
                 if (!isOrigFrameworkLink || linkItemSet.IsRedirected)
                 {
                     updatedLink = Path.GetRelativePath(articleDirPath, absolutePath).Replace("\\", "/");

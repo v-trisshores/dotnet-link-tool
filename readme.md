@@ -1,36 +1,36 @@
 ﻿# dotnet-link-tool
 
-Updates article links in one or more markdown files within the net/ folder of the [dotnet/docs-desktop](https://github.com/dotnet/docs-desktop) repo.
+Updates article links in one or more markdown files within the `net/` folder of the [dotnet/docs-desktop](https://github.com/dotnet/docs-desktop) repo.
 
 You can run the program on a single markdown file, or on any folder that contains markdown files. For the latter case, every markdown file at any nested level is processed.
 
 The program fixes stale article links for which a redirect exists. Each link is validated to ensure that the linked article exists.
 
-Don't run this tool on Framework articles.
+Don't run this tool on .NET Framework articles unless you want their article links updated to the latest .NET articles.
 
-## How to run
+## How to run the tool
 
 Call the program by passing in a single argument that's either:
 
-- A markdown file path (e.g. `dotnet-link-tool.exe attached-properties-overview.md`), or
-- A folder path that contains markdown files at any nested level (e.g. `dotnet-link-tool.exe C:\Repos\dotnet\docs-desktop\dotnet-desktop-guide\net`).
+- A markdown file path (for example, `dotnet-link-tool.exe attached-properties-overview.md`), or
+- A folder path that contains markdown files at any nested level (for example, `dotnet-link-tool.exe C:\Repos\dotnet\docs-desktop\dotnet-desktop-guide\net`).
 
 ## Redirect file assumptions
 
-- No redirect double-hops.
-- No conflicting target urls for the same source url.
-- Target url is a same or higher version than source url.
-- Target url is a .NET article.
+- No redirect double-hops (target URL of one redirect is the source URL of another).
+- No conflicting target URLs for the same source URL.
+- The target URL article has the same or higher .NET version as the source URL article.
+- The target URL article has a .NET 5/6 version.
 
 ## Link handling
 
-- Checks and if necessary updates links based on `definitions.json` redirect entries.
-- Converts all paths to relative paths since the tool only supports .NET articles and only processes redirects that point to .NET articles.
-- Removes query parameters for relative links (e.g. `../net/wpf/data/123.md?view=netdesktop-5.0&preserve-view=true` => `../net/wpf/data/123.md`).
-- Removes `./` from the beginning of paths (e.g. `./data/123.md` => `data/123.md`)
-- Removes redundant path segments (e.g. for article path `/framework/wpf/advanced/123.md` and link path `../../../framework/wpf/controls/123.md`, change the relative path to `../controls/123.md`).
-- For readability, adds the `index` file to links that omit it (e.g. `/dotnet/desktop/wpf/xaml/` => `/dotnet/desktop/wpf/xaml/index`).
-- Prints out a detailed report of link transformations.
+- Checks and updates article links as needed based on `definitions.json` redirect entries.
+- Relativizes paths to articles with a .NET 5/6 version, because those links and the article containing them exist under the `net/` folder.
+- Removes query parameters for relative links. For example: `../net/wpf/data/123.md?view=netdesktop-5.0&preserve-view=true` => `../net/wpf/data/123.md`).
+- Removes the redundant `./` from the beginning of paths. For example: `./data/123.md` => `data/123.md`)
+- Removes redundant path segments. For example: for article path `/framework/wpf/advanced/123.md` and link path `../../../framework/wpf/controls/123.md`, change the relative path to `../controls/123.md`).
+- For readability, adds the `index` file to links that omit it. For example: `/dotnet/desktop/wpf/xaml/` => `/dotnet/desktop/wpf/xaml/index`).
+- Prints a detailed report of each link's transformations.
 
 ## Report output
 
@@ -102,3 +102,5 @@ dotnet-desktop-guide/
             xaml/
     xaml-services/
 ```
+
+A more intuitive name for the `net/` folder would be `core/` since both .NET Framework and .NET Core are .NET technologies, and the `net` folder only contains .NET Core articles.
