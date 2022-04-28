@@ -1,13 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DocsLinkTool
+﻿namespace DocsLinkTool
 {
     internal class Log
     {
         internal static List<LinkItemSet> LinkItemSets = new();
+
+        internal class LinkItemSet
+        {
+            internal string ArticlePath;
+            internal bool IsLinkChanged;
+            internal bool IsRedirected;
+            internal List<LinkItem> Items = new();
+
+            public LinkItemSet(string articlePath)
+            {
+                ArticlePath = articlePath;
+            }
+        }
+
+        internal class LinkItem
+        {
+            internal string Action;
+            internal string Link;
+
+            public LinkItem(string action, string link)
+            {
+                Action = action;
+                Link = link;
+            }
+        }
     }
 }

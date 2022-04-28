@@ -67,11 +67,11 @@ namespace DocsLinkTool
 
             StringBuilder sb = new();
             int i = 1;
-            foreach (LinkItemSet linkItemSet in Log.LinkItemSets)
+            foreach (Log.LinkItemSet linkItemSet in Log.LinkItemSets)
             {
                 string text = $"{i++}. Link in article: '{linkItemSet.ArticlePath}' {(linkItemSet.IsLinkChanged ? "*" : "")}\r\n";
                 string indent = "  ";
-                foreach (LinkItem linkItem in linkItemSet.Items)
+                foreach (Log.LinkItem linkItem in linkItemSet.Items)
                 {
                     text += $"{indent}{linkItem.Action}: {linkItem.Link}\r\n";
                     indent += "  ";
@@ -79,7 +79,6 @@ namespace DocsLinkTool
                 Console.WriteLine(text);
                 sb.AppendLine(text);
             }
-            //File.WriteAllText(Path.Combine(baseRepoPath, @"dotnet-link-tool\link-stats.txt"), sb.ToString());
         }
     }
 }

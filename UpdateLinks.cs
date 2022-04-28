@@ -78,6 +78,8 @@ namespace DocsLinkTool
                 // Get the link.
                 string origLink = m.Groups["link"].ToString().Trim();
 
+                #region Initialize local variables
+
                 // Initialize local variables.
                 string origLinkBase = GetBaseLink(origLink);
                 string query = "";
@@ -86,11 +88,13 @@ namespace DocsLinkTool
                 bool isNewRelativeLink = false;
                 bool isOrigFrameworkLink = origLink.ContainsXx("netframeworkdesktop");
 
+                #endregion
+
                 #region Log setup
 
                 // Setup link logging.
-                LinkItemSet linkItemSet = new(articlePath: articleFilePath[(articleFilePath.IndexOf("\\dotnet-desktop-guide") + "\\dotnet-desktop-guide".Length)..].Replace("/", "\\"));
-                linkItemSet.Items.Add(new LinkItem("ORIGINAL-LINK", origLink));
+                Log.LinkItemSet linkItemSet = new(articlePath: articleFilePath[(articleFilePath.IndexOf("\\dotnet-desktop-guide") + "\\dotnet-desktop-guide".Length)..].Replace("/", "\\"));
+                linkItemSet.Items.Add(new Log.LinkItem("ORIGINAL-LINK", origLink));
                 Log.LinkItemSets.Add(linkItemSet);
 
                 #endregion
@@ -109,55 +113,55 @@ namespace DocsLinkTool
                 if (origLink.ContainsXx("/includes/"))
                 {
                     // Keep include file links as is.
-                    linkItemSet.Items.Add(new LinkItem("UNCHANGED", "include file link"));
+                    linkItemSet.Items.Add(new Log.LinkItem("UNCHANGED", "include file link"));
                     return origLink;
                 }
                 if (origLink.ContainsXx("xref"))
                 {
                     // Keep xref links as is.
-                    linkItemSet.Items.Add(new LinkItem("UNCHANGED", "xref link"));
+                    linkItemSet.Items.Add(new Log.LinkItem("UNCHANGED", "xref link"));
                     return origLink;
                 }
                 if (origLink.ContainsXx(".png") || origLink.ContainsXx(".jpg") || origLink.ContainsXx(".gif"))
                 {
                     // Keep image links as is.
-                    linkItemSet.Items.Add(new LinkItem("UNCHANGED", "image link"));
+                    linkItemSet.Items.Add(new Log.LinkItem("UNCHANGED", "image link"));
                     return origLink;
                 }
                 if (origLink.StartsWith("#"))
                 {
                     // Keep fragment links as is.
-                    linkItemSet.Items.Add(new LinkItem("UNCHANGED", "fragment link"));
+                    linkItemSet.Items.Add(new Log.LinkItem("UNCHANGED", "fragment link"));
                     return origLink;
                 }
                 if (origLink.StartsWithXx("http"))
                 {
                     // Keep http(s) links as is.
-                    linkItemSet.Items.Add(new LinkItem("UNCHANGED", "http(s) link"));
+                    linkItemSet.Items.Add(new Log.LinkItem("UNCHANGED", "http(s) link"));
                     return origLink;
                 }
                 if (origLink.StartsWith("/") && !origLink.StartsWithXx(docsetAliasPath))
                 {
                     // Keep http(s) links as is.
-                    linkItemSet.Items.Add(new LinkItem("UNCHANGED", "links to another repo"));
+                    linkItemSet.Items.Add(new Log.LinkItem("UNCHANGED", "links to another repo"));
                     return origLink;
                 }
                 if (origLink.StartsWith("~") && !origLink.StartsWithXx(docsetAliasPath))
                 {
                     // Keep ~ links as is.
-                    linkItemSet.Items.Add(new LinkItem("UNCHANGED", "unsupported link (tilda)"));
+                    linkItemSet.Items.Add(new Log.LinkItem("UNCHANGED", "unsupported link (tilda)"));
                     return origLink;
                 }
                 if (origLink.ContainsXx(".yml") || origLink.ContainsXx(".xaml") || origLink.ContainsXx(".cs") || origLink.ContainsXx(".vb"))
                 {
                     // Keep non-markdown links as is.
-                    linkItemSet.Items.Add(new LinkItem("UNCHANGED", "unsupported link (non-markdown file)"));
+                    linkItemSet.Items.Add(new Log.LinkItem("UNCHANGED", "unsupported link (non-markdown file)"));
                     return origLink;
                 }
                 if (origLink.Contains(' ') || origLink.Contains('(') || origLink.Contains(')') || origLink.Contains('[') || origLink.Contains(']'))
                 {
                     // Not a link.
-                    linkItemSet.Items.Add(new LinkItem("UNCHANGED", "unsupported link (unrecognized format)"));
+                    linkItemSet.Items.Add(new Log.LinkItem("UNCHANGED", "unsupported link (unrecognized format)"));
                     return origLink;
                 }
                 linkItemSet.IsLinkChanged = true;
@@ -174,25 +178,25 @@ namespace DocsLinkTool
                 {
                     // relative link in different folder to current article.
                     updatedLink = GetAliasPath(Path.GetFullPath(Path.Combine(articleDirPath, updatedLink)));
-                    linkItemSet.Items.Add(new LinkItem("ALIAS-PATH", updatedLink));
+                    linkItemSet.Items.Add(new Log.LinkItem("ALIAS-PATH", updatedLink));
                 }
                 if (updatedLink.StartsWith("./"))
                 {
                     // relative link in same folder as current article.
                     updatedLink = updatedLink[2..];
-                    linkItemSet.Items.Add(new LinkItem("ALIAS-PATH", updatedLink));
+                    linkItemSet.Items.Add(new Log.LinkItem("ALIAS-PATH", updatedLink));
                 }
                 if (string.Equals(Path.GetFileName(updatedLink), updatedLink, StringComparison.OrdinalIgnoreCase))
                 {
                     // relative link in same folder as current article.
                     updatedLink = GetAliasPath(Path.Combine(articleDirPath, updatedLink));
-                    linkItemSet.Items.Add(new LinkItem("ALIAS-PATH", updatedLink));
+                    linkItemSet.Items.Add(new Log.LinkItem("ALIAS-PATH", updatedLink));
                 }
                 if (!updatedLink.StartsWith("/"))
                 {
                     // relative link in a subfolder of the current article.
                     updatedLink = GetAliasPath(Path.Combine(articleDirPath, updatedLink));
-                    linkItemSet.Items.Add(new LinkItem("EXPAND-PATH", updatedLink));
+                    linkItemSet.Items.Add(new Log.LinkItem("EXPAND-PATH", updatedLink));
                 }
 
                 // Remove and store url parameters.
@@ -201,14 +205,14 @@ namespace DocsLinkTool
                     // Remove & store fragment.
                     fragment = updatedLink[updatedLink.IndexOf("#")..];
                     updatedLink = updatedLink[..updatedLink.IndexOf("#")];
-                    linkItemSet.Items.Add(new LinkItem("REMOVE-FRAGMENT", updatedLink));
+                    linkItemSet.Items.Add(new Log.LinkItem("REMOVE-FRAGMENT", updatedLink));
                 }
                 if (updatedLink.Contains('?'))
                 {
                     // Remove & store query.
                     query = updatedLink[updatedLink.IndexOf("?")..];
                     updatedLink = updatedLink[..updatedLink.IndexOf("?")];
-                    linkItemSet.Items.Add(new LinkItem("REMOVE-QUERY", updatedLink));
+                    linkItemSet.Items.Add(new Log.LinkItem("REMOVE-QUERY", updatedLink));
                 }
 
                 #endregion
@@ -233,21 +237,21 @@ namespace DocsLinkTool
                     // Replace with redirect.
                     linkItemSet.IsRedirected = true;
                     updatedLink = redirectLinks.First().DstPath;
-                    linkItemSet.Items.Add(new LinkItem("REDIRECT-TO", updatedLink));
+                    linkItemSet.Items.Add(new Log.LinkItem("REDIRECT-TO", updatedLink));
 
                     // Remove & store the new redirect query.
                     if (updatedLink.Contains('?'))
                     {
                         query = updatedLink[updatedLink.IndexOf("?")..] + "&preserve-view=true";
                         updatedLink = updatedLink[..updatedLink.IndexOf("?")];
-                        linkItemSet.Items.Add(new LinkItem("REMOVE-NEW-QUERY", updatedLink));
+                        linkItemSet.Items.Add(new Log.LinkItem("REMOVE-NEW-QUERY", updatedLink));
                     }
                     else query = "";
                 }
                 else
                 {
                     // No redirect found.
-                    linkItemSet.Items.Add(new LinkItem("REDIRECT-TO", "no redirect"));
+                    linkItemSet.Items.Add(new Log.LinkItem("REDIRECT-TO", "no redirect"));
                 }
 
                 #endregion
@@ -258,7 +262,7 @@ namespace DocsLinkTool
                 if (updatedLink.EndsWith("/"))
                 {
                     updatedLink += "index";
-                    linkItemSet.Items.Add(new LinkItem("COMPLETED-PATH", updatedLink));
+                    linkItemSet.Items.Add(new Log.LinkItem("COMPLETED-PATH", updatedLink));
                 }
 
                 // Validate that the article exists on disk.
@@ -295,7 +299,7 @@ namespace DocsLinkTool
                 if (!File.Exists(absolutePath))
                 {
                     linkItemSet.IsLinkChanged = false;
-                    linkItemSet.Items.Add(new LinkItem("INVALID-LINK", "file not found"));
+                    linkItemSet.Items.Add(new Log.LinkItem("INVALID-LINK", "file not found"));
                     return origLink;
                 }
 
@@ -314,7 +318,7 @@ namespace DocsLinkTool
                 {
                     updatedLink = Path.GetRelativePath(articleDirPath, absolutePath).Replace("\\", "/");
                     isNewRelativeLink = true;
-                    linkItemSet.Items.Add(new LinkItem("RELATIVE-PATH", updatedLink));
+                    linkItemSet.Items.Add(new Log.LinkItem("RELATIVE-PATH", updatedLink));
                 }
 
                 #endregion
@@ -325,14 +329,14 @@ namespace DocsLinkTool
                 if (!isNewRelativeLink && query.Length > 0 && !query.Contains("netdesktop"))
                 {
                     updatedLink += query.ToLower();
-                    linkItemSet.Items.Add(new LinkItem("RESTORE-QUERY", updatedLink));
+                    linkItemSet.Items.Add(new Log.LinkItem("RESTORE-QUERY", updatedLink));
                 }
 
                 // Restore fragment.
                 if (fragment.Length > 0)
                 {
                     updatedLink += fragment.ToLower();
-                    linkItemSet.Items.Add(new LinkItem("RESTORE-FRAGMENT", updatedLink));
+                    linkItemSet.Items.Add(new Log.LinkItem("RESTORE-FRAGMENT", updatedLink));
                 }
 
                 #endregion
@@ -343,7 +347,7 @@ namespace DocsLinkTool
                 if (Equals(updatedLink, origLink))
                 {
                     linkItemSet.IsLinkChanged = false;
-                    linkItemSet.Items.Add(new LinkItem("UNCHANGED", "same as original link"));
+                    linkItemSet.Items.Add(new Log.LinkItem("UNCHANGED", "same as original link"));
                 }
 
                 #endregion
